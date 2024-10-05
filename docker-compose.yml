@@ -1,12 +1,8 @@
 x-airflow-common:
   &airflow-common
-  # In order to add custom dependencies or upgrade provider packages you can use your extended image.
-  # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
-  # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
   build:
     context: .
     dockerfile: Dockerfile
-  # build: .
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -18,17 +14,14 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
-#    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
-    # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./config:/opt/airflow/config
     - ./data:/opt/airflow/data
-    - ./etl:/opt/airflow/etl
+    - ./etls:/opt/airflow/etls
     - ./utils:/opt/airflow/utils
-    - ./pipeline:/opt/airflow/pipeline
-#    - ./plugins:/opt/airflow/plugins
+    - ./pipelines:/opt/airflow/pipelines
   user: "1000:0"
   depends_on:
     &airflow-common-depends-on
@@ -38,6 +31,7 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+
   postgres:
     image: postgres:13
     environment:
@@ -57,8 +51,6 @@ services:
       - "5432:5432"
 
   redis:
-    # Redis is limited to 7.2-bookworm due to licencing change
-    # https://redis.io/blog/redis-adopts-dual-source-available-licensing/
     image: redis:7.2-bookworm
     expose:
       - 6379
@@ -110,7 +102,6 @@ services:
     <<: *airflow-common
     command: celery worker
     healthcheck:
-      # yamllint disable rule:line-length
       test:
         - "CMD-SHELL"
         - 'celery --app airflow.providers.celery.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}" || celery --app airflow.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}"'
@@ -120,12 +111,11 @@ services:
       start_period: 30s
     environment:
       <<: *airflow-common-env
-      # Required to handle warm shutdown of the celery workers properly
-      # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
       DUMB_INIT_SETSID: "0"
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
+
 
 volumes:
   postgres-db-volume:
