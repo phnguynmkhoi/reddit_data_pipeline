@@ -45,6 +45,7 @@ services:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
+      POSTGRES_PORT: 5432
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
     healthcheck:
@@ -53,6 +54,8 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+    ports:
+      - "5432:5432"
 
   redis:
     # Redis is limited to 7.2-bookworm due to licencing change
@@ -67,6 +70,14 @@ services:
       retries: 50
       start_period: 30s
     restart: always
+    ports:
+      - "6379:6379"
+
+  airflow-init:
+    <<: *airflow-common
+    command: >
+      bash -c "pip install -r /opt/airflow/requirements.txt && airflow db init && airflow users create --username admin --password admin --firstname Khoi --lastname Minh --role Admin --email pnmk0811@gmail.com && airflow webserver --port 8080"
+    restart: "no"
 
   airflow-webserver:
     <<: *airflow-common
@@ -122,3 +133,6 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+
+volumes:
+  postgres-db-volume:
