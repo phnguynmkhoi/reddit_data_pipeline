@@ -26,11 +26,10 @@ x-airflow-common:
     - ./config:/opt/airflow/config
     - ./data:/opt/airflow/data
     - ./etl:/opt/airflow/etl
-    - ./logs:/opt/airflow/logs
     - ./utils:/opt/airflow/utils
     - ./pipeline:/opt/airflow/pipeline
 #    - ./plugins:/opt/airflow/plugins
-  user: "${AIRFLOW_UID:-50000}:0"
+  user: "1000:0"
   depends_on:
     &airflow-common-depends-on
     redis:
@@ -93,8 +92,6 @@ services:
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
-      airflow-init:
-        condition: service_completed_successfully
 
   airflow-scheduler:
     <<: *airflow-common
@@ -108,8 +105,6 @@ services:
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
-      airflow-init:
-        condition: service_completed_successfully
 
   airflow-worker:
     <<: *airflow-common
@@ -131,8 +126,6 @@ services:
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
-      airflow-init:
-        condition: service_completed_successfully
 
 volumes:
   postgres-db-volume:
