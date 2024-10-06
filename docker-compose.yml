@@ -22,6 +22,7 @@ x-airflow-common:
     - ./etls:/opt/airflow/etls
     - ./utils:/opt/airflow/utils
     - ./pipelines:/opt/airflow/pipelines
+    - ./.env:/opt/airflow/.env
   user: "1000:0"
   depends_on:
     &airflow-common-depends-on

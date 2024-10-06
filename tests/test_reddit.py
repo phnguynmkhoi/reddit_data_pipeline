@@ -4,14 +4,15 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-client_id = os.getenv('id')
-secret = os.getenv('secret')
-subreddit = 'datascience'
+client_id = os.getenv('client_id')
+secret = os.getenv('secret_key')
+agent = os.getenv('user_agent')
+subreddit = 'dataengineering'
 
-keys = ('id', 'title', 'author','num_comments','upvote_ratio', 'score','created_utc', 'url', 'over_18')
+keys = ('id', 'title', 'selftext', 'author','num_comments','upvote_ratio', 'score','created_utc', 'over_18', 'url')
 
 try:
-    reddit_instance = Reddit(client_id=client_id,client_secret=secret, user_agent='ubuntu:data_pipeline:v0.1 (by /u/Chance_Strategy_9522)')
+    reddit_instance = Reddit(client_id=client_id,client_secret=secret, user_agent=agent)
     subreddit = reddit_instance.subreddit(subreddit)
     hot_sub = subreddit.top(time_filter='day',limit=100)
     for x in hot_sub:
