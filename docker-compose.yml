@@ -18,7 +18,7 @@ x-airflow-common:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./config:/opt/airflow/config
-    - ./data:/opt/airflow/data
+    - ./extracted_data:/opt/airflow/data
     - ./etls:/opt/airflow/etls
     - ./utils:/opt/airflow/utils
     - ./pipelines:/opt/airflow/pipelines
@@ -68,16 +68,16 @@ services:
   airflow-init:
     <<: *airflow-common
     command: >
-      bash -c "pip install -r /opt/airflow/requirements.txt && airflow db init && airflow users create --username admin --password admin --firstname Khoi --lastname Minh --role Admin --email pnmk0811@gmail.com && airflow webserver --port 8080"
+      bash -c "pip install -r /opt/airflow/requirements.txt && airflow db init && airflow users create --username admin --password admin --firstname Khoi --lastname Minh --role Admin --email pnmk0811@gmail.com && airflow webserver --port 9090"
     restart: "no"
 
   airflow-webserver:
     <<: *airflow-common
-    command: webserver
+    command: webserver -p 9090
     ports:
-      - "8080:8080"
+      - "9090:9090"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      test: ["CMD", "curl", "--fail", "http://localhost:9090/health"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -116,7 +116,75 @@ services:
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
+  
+  namenode:
+    image: bde2020/hadoop-namenode:1.1.0-hadoop2.8-java8
+    container_name: namenode
+    volumes:
+      - ./data/namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=test
+    env_file:
+      - ./hadoop-hive.env
+    ports:
+      - 50070:50070
 
+  datanode:
+    image: bde2020/hadoop-datanode:1.1.0-hadoop2.8-java8
+    depends_on: 
+      - namenode
+    volumes:
+      - ./data/datanode:/hadoop/dfs/data
+    env_file:
+      - ./hadoop-hive.env
+    ports:
+      - "50075:50075"
+
+  hive-server:
+    image: bde2020/hive:2.1.0-postgresql-metastore
+    container_name: hive-server
+    env_file:
+      - ./hadoop-hive.env
+    environment:
+      - "HIVE_CORE_CONF_javax_jdo_option_ConnectionURL=jdbc:postgresql://hive-metastore/metastore"
+    ports:
+      - "10000:10000"
+    depends_on:
+      - hive-metastore
+
+
+  hive-metastore:
+    image: bde2020/hive:2.1.0-postgresql-metastore
+    container_name: hive-metastore
+    env_file:
+      - ./hadoop-hive.env
+    command: /opt/hive/bin/hive --service metastore
+    depends_on:
+      - hive-metastore-postgresql
+
+  hive-metastore-postgresql:
+    image: bde2020/hive-metastore-postgresql:2.1.0
+
+  # spark-master:
+  #   image: bde2020/spark-master:2.1.0-hadoop2.8-hive-java8
+  #   container_name: spark-master
+  #   ports:
+  #     - 8080:8080
+  #     - 7077:7077
+  #   env_file:
+  #     - ./hadoop-hive.env
+    
+
+  # spark-worker:
+  #   image: bde2020/spark-worker:2.1.0-hadoop2.8-hive-java8
+  #   depends_on:
+  #     - spark-master
+  #   environment:
+  #     - SPARK_MASTER=spark://spark-master:7077
+  #   ports:
+  #     - "8081:8081"
+  #   env_file:
+  #     - ./hadoop-hive.env
 
 volumes:
   postgres-db-volume:

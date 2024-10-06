@@ -10,6 +10,7 @@ from airflow import DAG
 # Operators; we need this to operate!
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
+from airflow.operators.bash import BashOperator
 from pipelines.reddit_pipeline import *
 
 default_args = {
@@ -23,10 +24,10 @@ default_args = {
     'retry_delay': timedelta(minutes=2),
 }
 
-SUBREDDIT = 'dataengineering'
+SUBREDDIT = 'datascience'
 
 with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedelta(minutes=5), description='Reddit ETL pipeline', catchup=False) as dag:
-    task1 = PythonOperator(task_id='pipeline', python_callable=reddit_pipeline,
+    task1 = PythonOperator(task_id='extract_data', python_callable=reddit_pipeline,
                            op_kwargs={
                                'file_name': f'reddit_{SUBREDDIT}_{datetime.datetime.now().strftime("%Y%m%d")}',
                                'subreddit': SUBREDDIT,
@@ -34,4 +35,6 @@ with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedel
                                'limit': 100
                            })
     
-    task1
+    task2 = BashOperator(task_id='load_data_to_hdfs', bash_command='hdfs dfs -mkdir -p /data & hdfs dfs -put /opt/airflow/data/* hdfs://data/')
+    
+    task1 >> task2

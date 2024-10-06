@@ -2,3 +2,4 @@ logs
 # tests
 .env
 */.env
+data
