@@ -134,7 +134,7 @@ services:
     depends_on: 
       - namenode
     volumes:
-      - ./data/datanode:/hadoop/dfs/data
+      - ./extracted_data:/hadoop/dfs/data
     env_file:
       - ./hadoop-hive.env
     ports:
