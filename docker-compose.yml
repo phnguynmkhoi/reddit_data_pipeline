@@ -18,7 +18,7 @@ x-airflow-common:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./config:/opt/airflow/config
-    - ./extracted_data:/opt/airflow/data
+    - ./data/datanode:/opt/airflow/data
     - ./etls:/opt/airflow/etls
     - ./utils:/opt/airflow/utils
     - ./pipelines:/opt/airflow/pipelines
@@ -134,7 +134,7 @@ services:
     depends_on: 
       - namenode
     volumes:
-      - ./extracted_data:/hadoop/dfs/data
+      - ./data/datanode:/hadoop/dfs/data
     env_file:
       - ./hadoop-hive.env
     ports:
