@@ -35,4 +35,6 @@ with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedel
                                'limit': 100
                            })
     
-    task1 
+    task2 = BashOperator(task_id='load_data_to_hdfs', bash_command='hdfs dfs -mkdir -p /data & hdfs dfs -put /opt/airflow/data/* hdfs://data/')
+    
+    task1 >> task2
