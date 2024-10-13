@@ -15,15 +15,13 @@ x-airflow-common:
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
   volumes:
-    # - ./hadoop:/etc/hadoop
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./config:/opt/airflow/config
-    - ./data/datanode:/opt/airflow/data
+    - ./extracted_data:/opt/airflow/data
     - ./etls:/opt/airflow/etls
     - ./utils:/opt/airflow/utils
     - ./pipelines:/opt/airflow/pipelines
-    - ./.env:/opt/airflow/.env
   user: "0:0"
   depends_on:
     &airflow-common-depends-on
