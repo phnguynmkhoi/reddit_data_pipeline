@@ -1,0 +1,184 @@
+id,title,selftext,author,num_comments,upvote_ratio,score,created_utc,over_18,url
+1fwz7qg,“Best” way to iterate over a list,"Hello, I am working on a task to copy some data from A to B. I am using PySpark for this task. The script is very simple. I have to iterate over a list that contains two info, source and destination. So what I do is a for loop to iterate through this list and for each row get the source info and copy data to a specific location. Right now it takes around 1h to complete the job. There are over 200 tables to copy and I am expecting the number will increase in the near future. Can someone please share any idea or suggestion that I can use to improve the performance. I looked into doing some parallel runs, but I couldn’t figure out how to get it to work using PySpark. Thanks a lot. ",stock_daddy,27,0.88,26,2024-10-05 20:12:15,False,https://www.reddit.com/r/dataengineering/comments/1fwz7qg/best_way_to_iterate_over_a_list/
+1fwz92r,Is data normalization needed in 2024? How much normalization is actually required and when should it be done?,Can you provide some examples?,Notalabel_4566,20,0.73,24,2024-10-05 20:13:58,False,https://www.reddit.com/r/dataengineering/comments/1fwz92r/is_data_normalization_needed_in_2024_how_much/
+1fxdrw6,"Fastest ways to  ""query"" a non-flat JSON file","Hi.
+
+We have some decently large (\~500MB) JSON files, which we need to continually query for existence of nodes with certain properties or property values, and then traverse them. The JSON is structure is highly non-flat (i.e. has a lot of parent-child relationships). 
+
+This part of the code is in Python. I assume the default \`json\` package is not the best way to do it, right? Do you know any other library for working with huge JSON files and searching in them? Do ""fast JSON"" libraries such as pysimdjson etc help here? What about loading the JSON in DuckDB and query it using DuckDB JSON extension? Is that an overkill?
+
+Thanks",ihatebeinganonymous,20,0.96,25,2024-10-06 10:47:37,False,https://www.reddit.com/r/dataengineering/comments/1fxdrw6/fastest_ways_to_query_a_nonflat_json_file/
+1fx3dmy,"As a data analyst, am I on the right track on becoming a DE with the tools I’m using?","Currently, I’m working as a contractor data analyst, and my main tool at work is Alteryx, SQL, Excel, and VBA. we’re trying to convert VBA macros that someone else made into some Alteryx workflows. 
+
+although, I haven’t really seen Alteryx mentioned anywhere (to my knowledge) on job postings, even on other data analyst jobs. will this somehow hurt me when applying to data engineering jobs because it’s not relevant to Data Engineering…?
+
+also, I’m using SQL in my job a LOT by understanding my companies databases and I’m generating queries. so it seems like that will help. I’m guessing I’ll just have to keep sharpening other skills (i.e. programming, data warehouses, cloud platforms) ? any advice you can give or just letting me know if I’m on the track would be helpful :) thank you!",Lazy-Blacksmith7973,14,0.9,22,2024-10-05 23:34:54,False,https://www.reddit.com/r/dataengineering/comments/1fx3dmy/as_a_data_analyst_am_i_on_the_right_track_on/
+1fx6vaq,How much documentation is too much documentation?,"I recently joined a huge company where they have way more departments than one could count. Due to the sheer size of the data each of them handles, each of them has its own data engineering team. One thing I noticed is that even though there are a lot of great engineers in the department, a lot of the reliance is on them knowing things rather than documentation (which is there but I feel wasn't enough). 
+
+As I am training, given the complexity of the pipeline, I feel like just writing/saying that data moves from source, to here and then destination isn't enough. Am I being stupid, or are data engineers expected to just look at 100s of queries and just expected to understand/know all of it from reading those queries alone. 
+
+I ask this as someone who wants to know, if it's my skills that are lacking(and which ones) and I should be improving on my end or documentation that show exactly how data is processed is necessary.",iCodeDayAndNight,17,0.79,12,2024-10-06 02:46:31,False,https://www.reddit.com/r/dataengineering/comments/1fx6vaq/how_much_documentation_is_too_much_documentation/
+1fxcyg2,Key Advantages of Data Privacy Vaults Over Databases,,rawion363,0,0.92,10,2024-10-06 09:47:33,False,https://www.piiano.com/blog/key-advantages-of-data-privacy-vaults-over-traditional-databases
+1fx9quh,Data architecture for SME (small&mid enterprise),"Some friends want me to build them a solution to visualise data from e-commerce and operations.
+John and 3 mates consult 10 companies working in Amazon and Ebay.
+Peter works in a company with 30 employees doing procurement and finops.
+
+When does a bigger architecture make sense?
+How do you handle complexity not to make them needy?
+What else should I consider for the design and planning?
+
+My ideas are:
+S3 > athena > Quicksight
+
+S3 > airflow > RDS or WH solution> dbt > Quicksight (docker for containerisation)
+
+Ps. Normally people care about the outcome, they do not understand the importance of the backend. I am assuming they are not able to take decisions but like it or not.
+",TINHO-,0,0.79,8,2024-10-06 05:49:23,False,https://www.reddit.com/r/dataengineering/comments/1fx9quh/data_architecture_for_sme_smallmid_enterprise/
+1fx4b32,Career advice and using DE for good,"Hello, I'm writing this because lately I've been seriously considering using my knowledge as a data engineer to help small businesses to grow, I'm tired of corporate environment and I think I can be of more use to society if a offer cheap technology services to small business owners.
+
+How would you use your knowledge about DE to benefit society?
+Can we actually improve business performance of small businesses if we created small apps to help them with their inventories, sales, accounting and other operations?
+
+I think I'm not good enough at deploying software, so I'd love to create intuitive and easy to maintain and deploy software, so what do you suggest me to use to deploy my solutions?
+
+Thank you for reading this, It would be good if everyone who knows enough about technology could share their knowledge to help small business owners to keep up with big corporations in the future.",ALESS885,0,0.86,5,2024-10-06 00:23:18,False,https://www.reddit.com/r/dataengineering/comments/1fx4b32/career_advice_and_using_de_for_good/
+1fwz62s,Understanding the grand scheme of things,"I'm picking up foundational knowledge left and right beyond my core scripting and rundeck. What I am noticing is that there seems to be a fair amount of overlap between Databricks Workflows (with notebooks), dbt, and Apache Airflow. Can someone help me to better understand in a situation where you're building your data org from the ground floor, why you may choose one tool over another, and/or how these tools can be used synergistically?
+
+For example, dbt brings testing, which is an advantage that I have not seen in Databricks workflows. Conversely, dbt and apache airflow seem to be very similar in terms of usage. Thanks in advance!",techinpanko,3,0.72,3,2024-10-05 20:10:15,False,https://www.reddit.com/r/dataengineering/comments/1fwz62s/understanding_the_grand_scheme_of_things/
+1fxd6yi,Finding a new job in Europe!,"Recently I got the news that I will finish my contract at the end of November with my current client, time to find a new job (at least I have almost 2 months) as a freelance or in a company.
+
+I'm from Spain but I work 100% remote, I'm working for a german company, but now living now in Lithuania, working remotely. I have almost 5 year of exp (in January I will be 5), my stack and skills are:
+
+-Azure and Fabric (ADF, Synapse, Databricks, Data Lakes, Delta Lakes, Azure Storage, etc...)
+
+-ETL process (ADF, Databricks, Talend)
+
+-Python/Pyspark, Apache Spark
+
+-Work with different API's to retrieve data
+
+-SQL (basic queries, window functions, joins, views, stored procedures, index, CTE's)
+
+-Light knowledge of DBT
+
+-Data Modelling, Data Integration, Data Quality knowledge
+
+-Power BI reporting and dashboarding
+
+-CI/CD in Azure Devops/Git, Agile in Azure Devops/Jira
+
+Do you think I need wider stack or continuing improving to a higher level some of these skills to earn a new job? In the majority of things I'm between medium/high level. I will search ONLY for 100% remote jobs.
+
+How's the market right now to land a new role?
+
+Where do you recommend me to find? I usually get messages from recruiters in Linkedin, other alternative for a 100% remote job?",Irachar,4,0.55,2,2024-10-06 10:04:50,False,https://www.reddit.com/r/dataengineering/comments/1fxd6yi/finding_a_new_job_in_europe/
+1fx4ugg,Quick Question: How do you guys manage PII in dimensional modelling? do you have extra dimensional tables for RBAC? or a different solution,"I am new to the world of data engineering, and have been staffed on a project where I am doing some preliminary dimensional modelling where I need to create a fact table for a machine learning model to be used by data scientists for exploration. The fact table needs to have the information of transactions, orders, customers. While for DS name itself are not important but same table is to be ised by BI analysts making BI views to show top customers. I wonder how it is done in industry. I have slowly changing dimensions of order 2 for customer info. I am particular curious to know how seasoned data engineers tackle the following -
+
+1. Handling of PII
+2. Data Lineage and Audit Tracking
+3. Quality assurance
+
+The project is slightly different from a typical snowflake data engineering analytics project because this one is all in AWS. 
+
+ I apologize in advance if my question is stupid, I am a newbie ex data scientist trying to make my way into engineering through this project.",dorkmotter,5,0.67,2,2024-10-06 00:52:06,False,https://www.reddit.com/r/dataengineering/comments/1fx4ugg/quick_question_how_do_you_guys_manage_pii_in/
+1fxip7z,Skill Progression - Paralysis by Analysis,"Hey yall,
+
+I'm currently a data engineer of 2 years ish that's hitting a flatline in terms of skill progression. Initially coming from a DA background I'm definitely lacking in many facets that are used in DE today
+
+For those that hit a fork in the road previously when deciding how to move forward in their career, what ultimately aided in making a decision on how to do so?
+
+I find myself mentally stuck becuase there's so many things to learn. Some say I should learn DSA and more programming fundamentals like OOP Generators etc, some say I should learn DBA skills, some say I should skip all of that and learn cloud and get certifications, and some even say to go into devops tooling like docker k8s.
+
+I've got no idea how to navigate all that and I'm stuck. It doesn't help that I'm currently looking to shift into contract positions as an incorp becuase I'd like to actually keep the money I make rather than getting taxed at obscene rates in a HCOL area. 
+
+If that wasn't bad enough people around me tell me that I should be changing positions like getting into cybersecurity or devops engineering because that's where most contract positions are.
+
+Would like any advice on how to approach my progression in terms of skills, even profession in IT and how I can move forward in a good direction 
+",IceStallion,1,0.81,3,2024-10-06 15:12:12,False,https://www.reddit.com/r/dataengineering/comments/1fxip7z/skill_progression_paralysis_by_analysis/
+1fxhlx2,Are there trade publications we should be reading?,I was thinking about this again after being asked on an application what trade publications I keep up with. I know there's a ton of blogs but are there Journals of Data Engineering that we should know about?,kaumaron,0,0.72,3,2024-10-06 14:23:08,False,https://www.reddit.com/r/dataengineering/comments/1fxhlx2/are_there_trade_publications_we_should_be_reading/
+1fx8qm2,A tool to simplify data pipeline orchestration,"Hello - are there any tools or platforms out there that simplify managing pipeline orchestration - scheduling, monitoring, error handling, and automated scaling, all in one central dashboard? It would abstract all this management over a pipeline that comprises of several steps and tech - e.g. Kafka for ingestion, Spark for processing, and HDFS/S3 for storage. Do you see a need for it? ",dad1240,0,1.0,3,2024-10-06 04:41:01,False,https://www.reddit.com/r/dataengineering/comments/1fx8qm2/a_tool_to_simplify_data_pipeline_orchestration/
+1fxgmr4,Need Help: Building Star Schema for Customer Retention & Lifetime Value Analytics,"Hey everyone,
+
+I’m a DS stepping into DE for the first time and have been tasked with a sample company project. I’m struggling with a star schema for customer retention and lifetime value (LTV) analytics, and I’d really appreciate your advice.
+
+**Context:** We have an ELT pipeline consolidating order, transaction, and return data into a central data warehouse. The marketing team (mostly non-technical) wants to start using this data for decision-making and reporting. They’ve identified a few key questions they want to answer, with potential for more in the future. The warehouse currently has typical customer columns (name, email, etc.), and order data (date, quantity, price, SKU, refund flag).
+
+**Key Questions to Address:**
+
+1. How important is retention to my business, and how is this changing over time?
+2. What is the average lifetime value of my customers, and how is this changing over time?
+3. What distinguishes high-value customers from the rest?
+4. Which products attract high-value customers?
+5. What is the impact of returns and exchanges on the business?
+
+**Current Approach:** Right now, I’ve built a fact table for orders at the line-item level, and added things like global retention rate, lagged retention rate, etc. However, it feels wrong to calculate fields like “Retention Rate,” “Customer Lifetime Value,” “Order Rate,” and “Lost Sales” at this level of granularity. The marketing team is looking for these high-level metrics, but I’m not sure this is the best way to go about it.
+
+**Questions:**
+
+* How would you approach this from a dimensional modeling perspective?
+* Should I create different fact tables (e.g., at the customer or order level) to calculate retention, LTV, and related metrics?
+* How would you handle the evolving needs of the marketing team while ensuring the model is scalable and maintainable?
+
+Thanks in advance for any advice. I’m still learning, and your input would be super valuable!",Alert_Structure5264,1,0.81,3,2024-10-06 13:35:19,False,https://www.reddit.com/r/dataengineering/comments/1fxgmr4/need_help_building_star_schema_for_customer/
+1fxfa9l,Advice needed - How do I centralise and automate CSV/Excel data in different folders for analysis and visualisation?,"Hi all, 
+
+I’m looking for some advice on a data engineering issue. I’m not a data engineer, but I need to create a functional system due to the absence of a proper data lake or warehouse.
+
+I have a large number of CSV and Excel files scattered across various folders on a shared drive. These files are highly confidential, so they need to remain local.
+
+**Ideally, I want to consolidate them into a centralized database or structure** that automates the process and enables a proper data pipeline for analysis, rather than pulling from fragmented sources.
+
+I’ve considered Python or SQL, but I’m not sure what’s the best route. I previously used Azure Data Lake, but that’s not an option now. Other options such as Amazon and Google are also not an option at the moment. 
+
+Any advice on tools, workflows, or libraries that would help streamline this process? Preferably something that does not involve costs, or too high of a cost. If possible, something that can connect with APIs as well. 
+
+Thanks in advance!",thehotdawning,0,0.76,2,2024-10-06 12:24:06,False,https://www.reddit.com/r/dataengineering/comments/1fxfa9l/advice_needed_how_do_i_centralise_and_automate/
+1fx3rzj,Using Informatica Power Center: easy way to load 1000+ tables from source to target?,"Ps. I am looking for a scheduled job not a one time load.
+I am currently using informatica power center in a data management company I am working for. I am tasked with loading more than a 1000 tables from a source (DB2 database) to a target staging area (Oracle database).  
+I am used to creating independent mappings for each table even though the only column added (modification in target table) is a reference date column. However, are there any shortcuts to do this i.e. 1 single mapping that loops (somehow) over different parameters representing sources and targets.  
+Moreover, in the workflow manager i will have a 1000+ sessions for each table connected to each other.  
+Looking for the easiest and less tedious way to do this whole process!",Certain_Succotash374,6,0.76,2,2024-10-05 23:55:11,False,https://www.reddit.com/r/dataengineering/comments/1fx3rzj/using_informatica_power_center_easy_way_to_load/
+1fxl64r,Coinbase Technical Interviews,"I am lucky enough to have been advanced through a few rounds in the recruiting process for a data engineer position at Coinbase. After a behavioral assessment, logical reasoning assessment, and a 30 min phone screen with a recruiter they let me know I would have 2 subsequent technical rounds and a meeting with the hiring manager. 
+
+Does anybody know what I could expect from these rounds? Or does anyone have any insight on what a data engineer role at Coinbase looks like? They let me know one round would be SQL and the other Python. But I’m it sure if the SQL one will be straight forward problem solving or also include a conceptual component or if the Python one will be only data manipulation with pandas or may also include a DSA component. 
+
+Any and all advice is appreciated !",dmeegan1,0,1.0,1,2024-10-06 17:00:01,False,https://www.reddit.com/r/dataengineering/comments/1fxl64r/coinbase_technical_interviews/
+1fxkhwb,Which data lakehouse / lake format does your company currently use? Do you expect this will change in 2025?,"
+
+[View Poll](https://www.reddit.com/poll/1fxkhwb)",brrdprrsn,3,1.0,1,2024-10-06 16:30:33,False,https://www.reddit.com/r/dataengineering/comments/1fxkhwb/which_data_lakehouse_lake_format_does_your/
+1fxe37t,Career Advice (BI in Germany),"I'm a senior Consultant working in Germany. I'm specialized in Data Warehousing/Engineering/Modelling, with also an idea of Analytics. I don't consider myself a jack of all trades, but I work on a project basis and so far I've been doing well with happy clients. 
+
+Now I'm working as an employee for a company and my net salary is around 3400 euros per month. But my consulting hour is valued at around 130 to 150 euros to our clients and usually I have a full-time dedication with them. 
+
+I'm considering to transition into working as freelancer. As I'm not German I don't have a big network, so becoming new projects would be the biggest challenge. Therefore I am considering a middle point, which are temporary jobs (Arbeitnehmerüberlassung) where you work for a staffing company as an intermediary. So they find the projects for you, do part of the paperwork and get a commission for it.
+
+There are two main things I want to gain by doing this:
+
+- More freedom. Like being able to work from other countries, at least a couple of months per year. 
+
+- A bigger salary. I wouldn't be expecting to earn the 140-150 euros per hour as there will still be a middleman, but maybe 90-100 euros/hour. I know I then need to take into account taxes, health insurance and other expenditures that they were covered by my employer before. I also know there is more paperwork involved and I might consider having some professional to handle it if it gets too confusing for me as a non native.
+
+Now my questions:
+
+- Does these expectations makes sense? I'm I missing anything big on this analysis?
+
+- I saw there is quite a demand for data engineer or similar jobs on a project basis, so I think it shouldn't be impossible to find a job. My German level is intermediate, and I've managed well with German clients switching to English when necessary. Am I overestimating the market? Does earning around 90-100 euros/hour is realistic?
+
+- Should I also open my search to other countries, like Switzerland, Austria or Scandinavian countries? I thought about focusing in Germany as I already have proved experience on this country and a intermediate language level, and salaries are good
+
+- Anyone who has done this kind of jump that could give me any advice is greatly appreciated. I'm also curious about how was other's people experiences and if they think it was worth it",El-Sota,1,0.67,2,2024-10-06 11:09:32,False,https://www.reddit.com/r/dataengineering/comments/1fxe37t/career_advice_bi_in_germany/
+1fxcvsf,Oldest CPU usable for data engineering,"Today I have an old trusty computer from 2010 with the following CPU:
+
+* Intel(R) Core(TM) i7 CPU         960  @ 3.20GHz
+
+I use for some hobby project in data engineering/data science but I do get more and more problems with non supported feature different Python packages need (Polars, numpy etc). I need to buy a new used one but what is the oldest Intel/AMD cpu which is future proof for some years?
+An example of what I can afford is: Inter core i5 7400: 3 GHz Kaby Lake 14 nm",Wise-Ad-7492,7,0.6,1,2024-10-06 09:41:46,False,https://www.reddit.com/r/dataengineering/comments/1fxcvsf/oldest_cpu_usable_for_data_engineering/
+1fxc6dp,How is your experice with databrics? Need help with databrics platform.,"I have been exprimenting with the databrics platform for a few weeks. I find it difficult to manage the databrics clusters and autoscaling. Price is also a big factor when considering the databrics. 
+
+I need help with the following questions
+
+- How to effectively manage large databrics clusters?
+
+- Best practices for autoscaling the clusters?
+
+- How to optimize the cost? I am running pretty large clusters.",Queasy-Persimmon7701,15,0.44,0,2024-10-06 08:48:18,False,https://www.reddit.com/r/dataengineering/comments/1fxc6dp/how_is_your_experice_with_databrics_need_help/

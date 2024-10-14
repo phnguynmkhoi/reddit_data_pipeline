@@ -18,10 +18,11 @@ x-airflow-common:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
     - ./config:/opt/airflow/config
-    - ./extracted_data:/opt/airflow/data
+    - ./data:/opt/airflow/data
     - ./etls:/opt/airflow/etls
     - ./utils:/opt/airflow/utils
     - ./pipelines:/opt/airflow/pipelines
+    - ./.env:/opt/airflow/.env
   user: "0:0"
   depends_on:
     &airflow-common-depends-on
@@ -29,6 +30,9 @@ x-airflow-common:
       condition: service_healthy
     postgres:
       condition: service_healthy
+  networks:
+    - reddit
+  
 
 services:
 
@@ -49,6 +53,8 @@ services:
     restart: always
     ports:
       - "5432:5432"
+    networks:
+      - reddit
 
   redis:
     image: redis:7.2-bookworm
@@ -63,11 +69,13 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    networks:
+      - reddit
 
   airflow-init:
     <<: *airflow-common
     command: >
-      bash -c "pip install -r /opt/airflow/requirements.txt && airflow db init && airflow users create --username admin --password admin --firstname Khoi --lastname Minh --role Admin --email pnmk0811@gmail.com && airflow webserver --port 9090"
+      bash -c "airflow db init && airflow users create --username admin --password admin --firstname Khoi --lastname Minh --role Admin --email pnmk0811@gmail.com && airflow webserver --port 9090"
     restart: "no"
 
   airflow-webserver:
@@ -128,9 +136,14 @@ services:
     volumes:
       - minio-data:/data
     command: server /data --console-address ":9001"
-    
+    networks:
+      - reddit
     
 
 volumes:
   minio-data:
   postgres-db-volume:
+
+networks:
+  reddit:
+    driver: bridge
