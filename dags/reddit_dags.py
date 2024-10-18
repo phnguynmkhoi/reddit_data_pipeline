@@ -11,7 +11,15 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
 from airflow.operators.bash import BashOperator
-from pipelines.reddit_pipeline import *
+# from pipelines.reddit_pipeline import *
+from etls.extract import *
+from etls.transform import *
+from etls.load_to_minio import *
+from dotenv import load_dotenv
+
+# from airflow.models.baseoperator import chain
+
+load_dotenv()
 
 default_args = {
     'owner': 'minhkhoi',
@@ -24,16 +32,43 @@ default_args = {
     'retry_delay': timedelta(minutes=2),
 }
 
-SUBREDDIT = 'datascience'
+
+SECRET_KEY = os.getenv('secret_key')
+CLIENT_ID = os.getenv('client_id')
+USER_AGENT = os.getenv('user_agent')
+MINIO_ACCESS_KEY = os.getenv('minio_access_key')
+MINIO_SECRET_KEY = os.getenv('minio_secret_key')
 
 with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedelta(minutes=5), description='Reddit ETL pipeline', catchup=False) as dag:
-    task1 = PythonOperator(task_id='extract_data', python_callable=reddit_pipeline,
+    
+    current_time = datetime.datetime.now().strftime("%Y%m%d")
+    subreddit = 'dataengineering'
+    file_name = f'reddit_{subreddit}_{current_time}'
+
+    
+    extract = PythonOperator(task_id='extract_data', python_callable=extract_post,
                            op_kwargs={
-                               'file_name': f'reddit_{SUBREDDIT}_{datetime.datetime.now().strftime("%Y%m%d")}',
-                               'subreddit': SUBREDDIT,
+                               'file_name': file_name,
+                               'client_id': CLIENT_ID,
+                               'secret_key':SECRET_KEY,
+                               'user_agent':USER_AGENT,
+                               'subreddit': subreddit,
                                'time_filter': 'day',
-                               'limit': 100
+                               'limit': 10
                            })
     
+    transform = PythonOperator(task_id='transform_data', python_callable=transform_post,
+                               op_kwargs={
+                               'file_name': file_name
+                            })
     
-    task1 
+    load = PythonOperator(task_id='load_data', python_callable=load_data_to_minio,
+                          op_kwargs={
+                              'caterogy': subreddit,
+                              'file_name': file_name,
+                              'MINIO_ACCESS_KEY': MINIO_ACCESS_KEY,
+                              'MINIO_SECRET_KEY': MINIO_SECRET_KEY
+                          })
+
+
+    extract >> transform >> load

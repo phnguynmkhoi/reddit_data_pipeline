@@ -11,7 +11,7 @@ def load_data_to_minio(bucket_name: str,file_path:str, MINIO_ACCESS_KEY: str, MI
 
     # Initialize the Minio client
     client = Minio(
-        "localhost:9000",  # MinIO server address
+        "localhost:10000",  # MinIO server address
         access_key=MINIO_ACCESS_KEY,  # Replace with your MinIO access key
         secret_key=MINIO_SECRET_KEY,  # Replace with your MinIO secret key
         secure=False  # Set to True if you're using HTTPS
@@ -26,7 +26,7 @@ def load_data_to_minio(bucket_name: str,file_path:str, MINIO_ACCESS_KEY: str, MI
 
     # Upload the file
     try:
-        client.fput_object(bucket_name, object_name, file_path)
+        client.fput_object(bucket_name, f'raw/{object_name}', file_path)
         print(f"Successfully uploaded {file_path} to {bucket_name}/{object_name}.")
     except S3Error as e:
         print(f"Error uploading file: {e}")
@@ -34,7 +34,7 @@ def load_data_to_minio(bucket_name: str,file_path:str, MINIO_ACCESS_KEY: str, MI
     # Download the file back
     download_path = f"./tests/{object_name}-1"
     try:
-        client.fget_object(bucket_name, object_name, download_path)
+        client.fget_object(bucket_name, f'raw/{object_name}', download_path)
         print(f"Successfully downloaded {object_name} to {download_path}.")
     except S3Error as e:
         print(f"Error downloading file: {e}")
@@ -42,7 +42,7 @@ def load_data_to_minio(bucket_name: str,file_path:str, MINIO_ACCESS_KEY: str, MI
 MINIO_ACCESS_KEY = os.getenv('minio_access_key')
 MINIO_SECRET_KEY = os.getenv('minio_secret_key')
 
-load_data_to_minio('testing','./extracted_data/reddit_dataengineering_20241006',MINIO_ACCESS_KEY,MINIO_SECRET_KEY)
+load_data_to_minio('tests','./extracted_data/reddit_dataengineering_20241006',MINIO_ACCESS_KEY,MINIO_SECRET_KEY)
 
 df = pd.read_csv('./tests/reddit_dataengineering_20241006')
 print(df)

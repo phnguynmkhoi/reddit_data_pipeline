@@ -2,7 +2,7 @@ x-airflow-common:
   &airflow-common
   build:
     context: .
-    dockerfile: Dockerfile
+    dockerfile: Dockerfile.airflow
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -30,9 +30,21 @@ x-airflow-common:
       condition: service_healthy
     postgres:
       condition: service_healthy
-  networks:
-    - reddit
   
+x-spark-worker-common: 
+  &spark-common
+  build:
+    context: .
+    dockerfile: Dockerfile.spark
+  environment:
+    - SPARK_MASTER=spark://spark-master:7077
+    - SPARK_WORKER_CORES=1
+    - SPARK_WORKER_MEMORY=1G
+    - SPARK_DRIVER_MEMORY=1G
+    - SPARK_EXECUTOR_MEMORY=1G
+    - SPARK_WORKLOAD=worker
+  volumes:
+    - ./apps:/opt/spark-apps
 
 services:
 
@@ -53,8 +65,6 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    networks:
-      - reddit
 
   redis:
     image: redis:7.2-bookworm
@@ -69,22 +79,20 @@ services:
     restart: always
     ports:
       - "6379:6379"
-    networks:
-      - reddit
 
   airflow-init:
     <<: *airflow-common
     command: >
-      bash -c "airflow db init && airflow users create --username admin --password admin --firstname Khoi --lastname Minh --role Admin --email pnmk0811@gmail.com && airflow webserver --port 9090"
-    restart: "no"
+      bash -c "airflow db init && airflow users create --username admin --password admin --firstname Khoi --lastname Minh --role Admin --email pnmk0811@gmail.com && airflow webserver --port 8080"
+    restart: "always"
 
   airflow-webserver:
     <<: *airflow-common
-    command: webserver -p 9090
+    command: webserver -p 8080
     ports:
-      - "9090:9090"
+      - "8080:8080"
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:9090/health"]
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -131,19 +139,38 @@ services:
       MINIO_ROOT_USER: minioadmin         # Default access key (change it)
       MINIO_ROOT_PASSWORD: minioadmin     # Default secret key (change it)
     ports:
-      - "10000:9000"   # MinIO API port
-      - "10001:9001"   # MinIO console port
+      - "9000:9000"   # MinIO API port
+      - "9001:9001"   # MinIO console port
     volumes:
       - minio-data:/data
     command: server /data --console-address ":9001"
-    networks:
-      - reddit
     
+  spark-master:
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
+    volumes:
+      - ./apps:/opt/spark-apps
+    environment:
+      - SPARK_LOCAL_IP=spark-master
+      - SPARK_WORKLOAD=master
+
+  spark-worker-a:
+    <<: *spark-common
+    environment:
+      - SPARK_LOCAL_IP=spark-worker-a 
+  
+  spark-worker-b:
+    <<: *spark-common
+    environment:
+      - SPARK_LOCAL_IP=spark-worker-b 
+  
+  spark-worker-c:
+    <<: *spark-common
+    environment:
+      - SPARK_LOCAL_IP=spark-worker-c 
+  
 
 volumes:
   minio-data:
   postgres-db-volume:
-
-networks:
-  reddit:
-    driver: bridge
