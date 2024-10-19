@@ -10,4 +10,4 @@ def transform_post(file_name:str, **kwargs):
     df['over_18'] = np.where((df['over_18']),True,False)
     if os.path.exists('/opt/airflow/data/transformed') == False:
         os.mkdir('/opt/airflow/data/transformed')
-    df.to_csv(f'/opt/airflow/data/transformed/{file_name}.csv')
+    df.to_parquet(f'/opt/airflow/data/transformed/{file_name}')

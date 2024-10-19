@@ -2,6 +2,7 @@ import praw
 from praw import Reddit
 import pandas as pd
 import os
+import datetime
 
 
 def connect_to_reddit(client_id: str, secret_key: str, user_agent: str)-> Reddit:
@@ -17,7 +18,7 @@ def extract_post(file_name: str, client_id:str, secret_key:str, user_agent:str ,
     instance = connect_to_reddit(client_id,secret_key,user_agent)
 
     posts = instance.subreddit(subreddit).top(time_filter=time_filter, limit=limit)
-    keys = ('id', 'title', 'selftext', 'author','num_comments','upvote_ratio', 'score','created_utc', 'over_18', 'url')
+    keys = ('id', 'title', 'author','num_comments','upvote_ratio', 'score','created_utc', 'over_18', 'url')
     extracted_post = []
 
     for post in posts:
@@ -26,7 +27,6 @@ def extract_post(file_name: str, client_id:str, secret_key:str, user_agent:str ,
         extracted_post.append(post_dict)
     
     df = pd.DataFrame(extracted_post)
+    df['subreddit'] = subreddit
     df.set_index('id',inplace=True)
-    if os.path.exists('/opt/airflow/data/raw') == False:
-        os.mkdir('/opt/airflow/data/raw')
-    df.to_csv(f'/opt/airflow/data/raw/{file_name}.csv')
+    df.to_csv(f'/opt/airflow/data/{file_name}.csv',sep='\t')

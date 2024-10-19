@@ -4,7 +4,7 @@ from minio.error import S3Error
 def load_data_to_minio(caterogy: str,file_name:str, MINIO_ACCESS_KEY: str, MINIO_SECRET_KEY: str, **kwargs):
 
 
-    file_path = f'/opt/airflow/data/transformed/{file_name}.csv'
+    file_path = f'/opt/airflow/data/{file_name}.csv'
     # Initialize the Minio client
     client = Minio(
         "minio:9000",  # MinIO server address
@@ -14,7 +14,7 @@ def load_data_to_minio(caterogy: str,file_name:str, MINIO_ACCESS_KEY: str, MINIO
     )
 
     # Define bucket name and file paths
-    object_name = f'{caterogy}/raw/{file_name}.csv' # The object name you want to save in the bucket
+    object_name = f'raw/{file_name}.csv' # The object name you want to save in the bucket
 
     # Create the bucket if it doesn't exist
     if not client.bucket_exists('reddit'):

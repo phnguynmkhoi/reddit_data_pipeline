@@ -39,12 +39,13 @@ x-spark-worker-common:
   environment:
     - SPARK_MASTER=spark://spark-master:7077
     - SPARK_WORKER_CORES=2
-    - SPARK_WORKER_MEMORY=1G
-    - SPARK_DRIVER_MEMORY=1G
-    - SPARK_EXECUTOR_MEMORY=1G
+    - SPARK_WORKER_MEMORY=2G
+    - SPARK_DRIVER_MEMORY=2G
+    - SPARK_EXECUTOR_MEMORY=2G
     - SPARK_WORKLOAD=worker
   volumes:
     - ./apps:/opt/spark/spark-apps
+    - ./jars:/opt/jars
   depends_on:
     - spark-master
 
@@ -156,9 +157,10 @@ services:
       - "7077:7077"
       - "4040-4060:4040-4060"
     volumes:
+      - ./jars:/opt/jars
       - ./apps:/opt/spark/spark-apps
     environment:
-      # - SPARK_LOCAL_IP=spark-master
+      - SPARK_LOCAL_IP=spark-master
       - SPARK_WORKLOAD=master
 
   spark-worker-a:
@@ -166,8 +168,8 @@ services:
     ports:
       - "9091:8080"
       - "7000:7000"
-    # environment:
-      # - SPARK_LOCAL_IP=spark-worker-a 
+    environment:
+      - SPARK_LOCAL_IP=spark-worker-a 
   
   spark-worker-b:
     <<: *spark-common
@@ -175,7 +177,7 @@ services:
       - "9092:8080"
       - "7001:7000"
     # environment:
-      # - SPARK_LOCAL_IP=spark-worker-b 
+    #   - SPARK_LOCAL_IP=spark-worker-b 
   
   # spark-worker-c:
   #   <<: *spark-common

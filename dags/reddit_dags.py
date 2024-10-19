@@ -42,7 +42,7 @@ MINIO_SECRET_KEY = os.getenv('minio_secret_key')
 with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedelta(minutes=5), description='Reddit ETL pipeline', catchup=False) as dag:
     
     current_time = datetime.datetime.now().strftime("%Y%m%d")
-    subreddit = 'dataengineering'
+    subreddit = 'dataanalyst'
     file_name = f'reddit_{subreddit}_{current_time}'
 
     
@@ -57,11 +57,6 @@ with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedel
                                'limit': 10
                            })
     
-    transform = PythonOperator(task_id='transform_data', python_callable=transform_post,
-                               op_kwargs={
-                               'file_name': file_name
-                            })
-    
     load = PythonOperator(task_id='load_data', python_callable=load_data_to_minio,
                           op_kwargs={
                               'caterogy': subreddit,
@@ -71,4 +66,4 @@ with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedel
                           })
 
 
-    extract >> transform >> load
+    extract >> load
