@@ -38,13 +38,15 @@ x-spark-worker-common:
     dockerfile: Dockerfile.spark
   environment:
     - SPARK_MASTER=spark://spark-master:7077
-    - SPARK_WORKER_CORES=1
+    - SPARK_WORKER_CORES=2
     - SPARK_WORKER_MEMORY=1G
     - SPARK_DRIVER_MEMORY=1G
     - SPARK_EXECUTOR_MEMORY=1G
     - SPARK_WORKLOAD=worker
   volumes:
-    - ./apps:/opt/spark-apps
+    - ./apps:/opt/spark/spark-apps
+  depends_on:
+    - spark-master
 
 services:
 
@@ -149,26 +151,39 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.spark
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+      - "4040-4060:4040-4060"
     volumes:
-      - ./apps:/opt/spark-apps
+      - ./apps:/opt/spark/spark-apps
     environment:
-      - SPARK_LOCAL_IP=spark-master
+      # - SPARK_LOCAL_IP=spark-master
       - SPARK_WORKLOAD=master
 
   spark-worker-a:
     <<: *spark-common
-    environment:
-      - SPARK_LOCAL_IP=spark-worker-a 
+    ports:
+      - "9091:8080"
+      - "7000:7000"
+    # environment:
+      # - SPARK_LOCAL_IP=spark-worker-a 
   
   spark-worker-b:
     <<: *spark-common
-    environment:
-      - SPARK_LOCAL_IP=spark-worker-b 
+    ports:
+      - "9092:8080"
+      - "7001:7000"
+    # environment:
+      # - SPARK_LOCAL_IP=spark-worker-b 
   
-  spark-worker-c:
-    <<: *spark-common
-    environment:
-      - SPARK_LOCAL_IP=spark-worker-c 
+  # spark-worker-c:
+  #   <<: *spark-common
+  #   ports:
+  #     - "9093:8080"
+  #     - "7000:7000"
+  #   environment:
+  #     - SPARK_LOCAL_IP=spark-worker-c 
   
 
 volumes:

@@ -14,7 +14,7 @@ def load_data_to_minio(caterogy: str,file_name:str, MINIO_ACCESS_KEY: str, MINIO
     )
 
     # Define bucket name and file paths
-    object_name = f'{caterogy}/raw/{file_name}' # The object name you want to save in the bucket
+    object_name = f'{caterogy}/raw/{file_name}.csv' # The object name you want to save in the bucket
 
     # Create the bucket if it doesn't exist
     if not client.bucket_exists('reddit'):

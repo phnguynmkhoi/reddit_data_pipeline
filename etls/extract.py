@@ -26,6 +26,7 @@ def extract_post(file_name: str, client_id:str, secret_key:str, user_agent:str ,
         extracted_post.append(post_dict)
     
     df = pd.DataFrame(extracted_post)
+    df.set_index('id',inplace=True)
     if os.path.exists('/opt/airflow/data/raw') == False:
         os.mkdir('/opt/airflow/data/raw')
     df.to_csv(f'/opt/airflow/data/raw/{file_name}.csv')
