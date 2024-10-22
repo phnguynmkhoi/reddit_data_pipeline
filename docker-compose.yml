@@ -1,8 +1,6 @@
 x-airflow-common:
   &airflow-common
-  build:
-    context: .
-    dockerfile: Dockerfile.airflow
+  image: airflow-default:latest
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -14,15 +12,20 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
+    AIRFLOW_CONN_SPARK_DEFAULT: 'spark://spark-cluster-master:7077?spark_binary=spark-submit'
+    # SPARK_CLASSPATH: '/opt/spark/jars/*'
+
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
-    - ./config:/opt/airflow/config
+    # - ./config:/opt/airflow/config
     - ./data:/opt/airflow/data
     - ./etls:/opt/airflow/etls
     - ./utils:/opt/airflow/utils
     - ./pipelines:/opt/airflow/pipelines
     - ./.env:/opt/airflow/.env
+    - ./jars:/opt/spark/jars
+    - ./airflow.cfg:/opt/spark/airflow.cfg
   user: "0:0"
   depends_on:
     &airflow-common-depends-on
@@ -33,9 +36,7 @@ x-airflow-common:
   
 x-spark-worker-common: 
   &spark-common
-  build:
-    context: .
-    dockerfile: Dockerfile.spark
+  image: spark-cluster:3.1.3
   environment:
     - SPARK_MASTER=spark://spark-master:7077
     - SPARK_WORKER_CORES=2
@@ -45,7 +46,7 @@ x-spark-worker-common:
     - SPARK_WORKLOAD=worker
   volumes:
     - ./apps:/opt/spark/spark-apps
-    - ./jars:/opt/jars
+    # - ./jars:/opt/spark/jars
   depends_on:
     - spark-master
 
@@ -142,34 +143,33 @@ services:
       MINIO_ROOT_USER: minioadmin         # Default access key (change it)
       MINIO_ROOT_PASSWORD: minioadmin     # Default secret key (change it)
     ports:
-      - "9000:9000"   # MinIO API port
-      - "9001:9001"   # MinIO console port
+      - "10000:9000"   # MinIO API port
+      - "10001:9001"   # MinIO console port
     volumes:
       - minio-data:/data
     command: server /data --console-address ":9001"
     
   spark-master:
-    build:
-      context: .
-      dockerfile: Dockerfile.spark
+    image: spark-cluster:3.1.3
     ports:
       - "9090:8080"
       - "7077:7077"
       - "4040-4060:4040-4060"
     volumes:
-      - ./jars:/opt/jars
+      # - ./jars:/opt/spark/jars
       - ./apps:/opt/spark/spark-apps
-    environment:
-      - SPARK_LOCAL_IP=spark-master
-      - SPARK_WORKLOAD=master
+    # environment:
+      # - SPARK_LOCAL_IP=spark-master
+      # - SPARK_WORKLOAD=master
 
   spark-worker-a:
     <<: *spark-common
     ports:
       - "9091:8080"
       - "7000:7000"
-    environment:
-      - SPARK_LOCAL_IP=spark-worker-a 
+    # environment:
+      # - SPARK_LOCAL_IP=spark-worker-a 
+      # - SPARK_WORKLOAD=worker
   
   spark-worker-b:
     <<: *spark-common
@@ -177,6 +177,7 @@ services:
       - "9092:8080"
       - "7001:7000"
     # environment:
+    #   - SPARK_WORKLOAD=worker
     #   - SPARK_LOCAL_IP=spark-worker-b 
   
   # spark-worker-c:

@@ -1,17 +1,15 @@
 FROM apache/airflow:2.10.2-python3.10
 
 COPY requirements.txt /opt/airflow/
-
-# Install Java and other necessary dependencies
-
+WORKDIR /opt/airflow
 
 USER root
 RUN apt-get update && apt-get install -y gcc python3-dev
+RUN curl -L -o openjdk-11.0.11_linux-x64_bin.tar.gz https://builds.openlogic.com/downloadJDK/openlogic-openjdk/11.0.11%2B9/openlogic-openjdk-11.0.11%2B9-linux-x64.tar.gz?_gl=1*13ldllg*_gcl_au*MTMyMzk3MjYzMS4xNzI5NDQxMDgz
+RUN tar -xf openjdk-11.0.11_linux-x64_bin.tar.gz
 
-# RUN mkdir -p /opt/airflow/logs/scheduler && \
-#     chown -R airflow:airflow /opt/airflow/logs
+
+ENV JAVA_HOME /opt/airflow/openlogic-openjdk-11.0.11+9-linux-x64/
 
 USER airflow
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Use a base image of your choice

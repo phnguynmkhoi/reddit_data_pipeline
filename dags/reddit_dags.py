@@ -10,12 +10,14 @@ from airflow import DAG
 # Operators; we need this to operate!
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
-from airflow.operators.bash import BashOperator
 # from pipelines.reddit_pipeline import *
 from etls.extract import *
-from etls.transform import *
 from etls.load_to_minio import *
+from etls.process_data import *
+from etls.load_processed_data_to_archive import archive_data
 from dotenv import load_dotenv
+
+from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 
 # from airflow.models.baseoperator import chain
 
@@ -39,10 +41,10 @@ USER_AGENT = os.getenv('user_agent')
 MINIO_ACCESS_KEY = os.getenv('minio_access_key')
 MINIO_SECRET_KEY = os.getenv('minio_secret_key')
 
-with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedelta(minutes=5), description='Reddit ETL pipeline', catchup=False) as dag:
+with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedelta(minutes=10), description='Reddit ETL pipeline', catchup=False) as dag:
     
     current_time = datetime.datetime.now().strftime("%Y%m%d")
-    subreddit = 'dataanalyst'
+    subreddit = 'datascience'
     file_name = f'reddit_{subreddit}_{current_time}'
 
     
@@ -65,5 +67,14 @@ with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedel
                               'MINIO_SECRET_KEY': MINIO_SECRET_KEY
                           })
 
+    process = SparkSubmitOperator(task_id='process', 
+                                  application='/opt/airflow/etls/process_data.py',
+                                  verbose=True)
+    
+    archive_data = PythonOperator(task_id='archive_data', python_callable=archive_data,
+                                  op_kwargs = {
+                                      'MINIO_ACCESS_KEY': MINIO_ACCESS_KEY,
+                                      'MINIO_SECRET_KEY': MINIO_SECRET_KEY
+                                  })
 
-    extract >> load
+    extract >> load >> process >> archive_data
