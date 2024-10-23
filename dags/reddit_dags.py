@@ -44,7 +44,7 @@ MINIO_SECRET_KEY = os.getenv('minio_secret_key')
 with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedelta(minutes=10), description='Reddit ETL pipeline', catchup=False) as dag:
     
     current_time = datetime.datetime.now().strftime("%Y%m%d")
-    subreddit = 'datascience'
+    subreddit = 'vietnam'
     file_name = f'reddit_{subreddit}_{current_time}'
 
     
@@ -73,6 +73,7 @@ with DAG('reddit_pipeline', default_args=default_args, schedule_interval=timedel
     
     archive_data = PythonOperator(task_id='archive_data', python_callable=archive_data,
                                   op_kwargs = {
+                                      'file_name': file_name,
                                       'MINIO_ACCESS_KEY': MINIO_ACCESS_KEY,
                                       'MINIO_SECRET_KEY': MINIO_SECRET_KEY
                                   })

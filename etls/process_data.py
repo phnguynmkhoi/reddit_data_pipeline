@@ -5,13 +5,13 @@ import datetime
 import os
 from dotenv import load_dotenv
 
-# load_dotenv()
+load_dotenv()
 
-aws_java_jar = "/opt/spark/jars/aws-java-sdk-bundle-1.11.901.jar"
+aws_java_jar = "/opt/spark/jars/aws-java-sdk-bundle-1.11.375.jar"
 hadoop_aws_jar = "/opt/spark/jars/hadoop-aws-3.2.0.jar"
 
-# MINIO_ACCESS_KEY = os.getenv('minio_access_key')
-# MINIO_SECRET_KEY = os.getenv('minio_secret_key')
+MINIO_ACCESS_KEY = os.getenv('minio_access_key')
+MINIO_SECRET_KEY = os.getenv('minio_secret_key')
 
 spark = SparkSession.builder \
     .appName("Read MinIO File") \
@@ -19,8 +19,8 @@ spark = SparkSession.builder \
     .config('spark.jars',f'{aws_java_jar},{hadoop_aws_jar}')\
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")\
     .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", 'htr93AeV4AyoNvdyrjRM') \
-    .config("spark.hadoop.fs.s3a.secret.key", 'bluVvDq5TYyWo3oHd4s8M6jHsPIdjC72Y3FvwS3J') \
+    .config("spark.hadoop.fs.s3a.access.key", '2irsHaALo6EzOxenTMeu') \
+    .config("spark.hadoop.fs.s3a.secret.key", 'bzPNS4HOyAj9sxnTO9va4qnoz6VGdxRfP4LH7QbO') \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .getOrCreate()
 
@@ -48,9 +48,7 @@ try:
 
     # df.show(2)
 
-    try:
-        df.write.mode('append').parquet(f's3a://reddit/transformed/{today}')
-    except Exception as e:
-        print(e)
+    df.write.partitionBy('subreddit').mode('append').parquet(f's3a://reddit/transformed/{today}')
+    
 except Exception as e:
     print(e)

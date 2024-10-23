@@ -1,36 +1,34 @@
-import boto3
-from botocore.client import Config
+from minio import Minio
+from minio.error import S3Error
+from minio.commonconfig import REPLACE, CopySource
+
 import os
 import datetime
 
-def archive_data(MINIO_ACCESS_KEY: str, MINIO_SECRET_KEY: str):
+def archive_data(file_name: str,MINIO_ACCESS_KEY: str, MINIO_SECRET_KEY: str):
 # Replace these with your MinIO configuration
-    minio_endpoint = 'http://minio:9000'  # Your MinIO endpoint
+    minio_endpoint = 'minio:9000'  # Your MinIO endpoint
 
     # Create a session with MinIO
-    s3 = boto3.client('s3',
-                    endpoint_url=minio_endpoint,
-                    aws_access_key_id=MINIO_ACCESS_KEY,
-                    aws_secret_access_key=MINIO_ACCESS_KEY,
-                    config=Config(signature_version='s3v4'))
+    client = Minio(
+        minio_endpoint,  
+        access_key=MINIO_ACCESS_KEY,  
+        secret_key=MINIO_SECRET_KEY,  
+        secure=False  
+    )
 
     today = datetime.datetime.now()
     today = today.strftime('%Y%m%d')
     bucket = "reddit"
-    source_path = f"raw/{today}/"
-    des_path = f"processed/{today}/"
-
-    
-    object_list = s3.list_objects(Bucket=bucket, Prefix = source_path)
-
-    for x in object_list['Contents']:
-        file_name = x['Key'].split('/')[-1]
-        key_path = f'{des_path}{file_name}'
-        # print(des_path)
-        s3.copy_object(
-            Bucket=bucket,
-            CopySource={'Bucket':bucket, 'Key': f"{x['Key']}"},
-            Key=key_path
+    source_path = f"raw/{today}/{file_name}.csv"
+    des_path = f"processed/{today}/{file_name}.csv"
+    try:
+        client.copy_object(
+            bucket,
+            des_path,
+            CopySource(bucket, source_path)
         )
-         
-        s3.delete_object(Bucket=bucket, Key=x['Key'])
+
+        client.remove_object(bucket, source_path)
+    except S3Error as e:
+        print(f"Error moving file: {e}")
