@@ -21,7 +21,7 @@ def archive_data(file_name: str,MINIO_ACCESS_KEY: str, MINIO_SECRET_KEY: str):
     today = today.strftime('%Y%m%d')
     bucket = "reddit"
     source_path = f"raw/{today}/{file_name}.csv"
-    des_path = f"processed/{today}/{file_name}.csv"
+    des_path = f"archived/{today}/{file_name}.csv"
     try:
         client.copy_object(
             bucket,

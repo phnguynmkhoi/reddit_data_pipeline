@@ -19,8 +19,8 @@ spark = SparkSession.builder \
     .config('spark.jars',f'{aws_java_jar},{hadoop_aws_jar}')\
     .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")\
     .config("spark.hadoop.fs.s3a.endpoint", "http://minio:9000") \
-    .config("spark.hadoop.fs.s3a.access.key", '2irsHaALo6EzOxenTMeu') \
-    .config("spark.hadoop.fs.s3a.secret.key", 'bzPNS4HOyAj9sxnTO9va4qnoz6VGdxRfP4LH7QbO') \
+    .config("spark.hadoop.fs.s3a.access.key", MINIO_ACCESS_KEY) \
+    .config("spark.hadoop.fs.s3a.secret.key", MINIO_SECRET_KEY) \
     .config("spark.hadoop.fs.s3a.path.style.access", "true") \
     .getOrCreate()
 
