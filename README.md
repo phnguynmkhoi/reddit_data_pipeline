@@ -53,7 +53,7 @@ The entire pipeline is managed by Airflow and uses a Spark cluster for scalable 
 
 ## Accessing MinIO
 
-- **MinIO Console**: [http://localhost:10000](http://localhost:10000)
+- **MinIO Console**: [http://localhost:10001](http://localhost:10001)
 - Use the credentials in your `.env` or Docker Compose file to log in.
 - Also remember to create key and paste it to your `.env` file 
 
