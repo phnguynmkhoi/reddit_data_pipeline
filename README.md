@@ -68,7 +68,7 @@ Airflow’s web server is accessible at [http://localhost:8080](http://localhost
 - **Archived Data**: Processed data is moved from `raw` to `archived` once the pipeline completes.
 
 ## Notes
-
+- You must download following jars files into ./jars folder: hadoop-aws-3.2.0.jar, aws-java-sdk-bundle-1.11.375.jar before running the project.
 - Ensure that the MinIO and Reddit API credentials are configured before running the pipeline.
 - You can create additional Spark jobs for more advanced data transformations and aggregations based on the extracted data.
 - This project can be scaled and extended to handle multiple subreddits or different data sources.
